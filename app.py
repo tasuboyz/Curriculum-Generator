@@ -3,14 +3,29 @@
 
 import json
 import os
+import uuid
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 import generation_cv  # Importa il modulo generation_cv esistente per la generazione del CV
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = "cv-update-secret-key"  # Chiave segreta per i messaggi flash
 
 # Percorso del file JSON del CV
 CV_JSON_PATH = 'cv.json'
+# Cartella per le immagini del profilo
+PROFILE_IMAGES_DIR = os.path.join('static', 'img')
+# Estensioni consentite per le immagini
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+# Verifica delle estensioni consentite
+def allowed_file(filename):
+    """Verifica se l'estensione del file è consentita."""
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Assicurati che la cartella per le immagini esista
+os.makedirs(PROFILE_IMAGES_DIR, exist_ok=True)
 
 def load_cv_data():
     """Carica i dati dal file JSON del CV."""
@@ -295,6 +310,43 @@ def download_cv():
     else:
         flash('Il file CV non è stato ancora generato. Genera prima il CV.', 'warning')
         return redirect(url_for('index'))
+
+@app.route('/upload-photo', methods=['POST'])
+def upload_photo():
+    """Gestisce l'upload della foto profilo."""
+    # Controlla se è stato inviato un file
+    if 'profile_photo' not in request.files:
+        flash('Nessun file inviato', 'danger')
+        return redirect(url_for('index'))
+        
+    file = request.files['profile_photo']
+    
+    # Se l'utente non seleziona un file, il browser invia un file vuoto senza nome
+    if file.filename == '':
+        flash('Nessun file selezionato', 'danger')
+        return redirect(url_for('index'))
+        
+    # Se il file esiste ed è un'estensione consentita
+    if file and allowed_file(file.filename):
+        # Genera un nome di file sicuro e unico
+        filename = str(uuid.uuid4()) + os.path.splitext(secure_filename(file.filename))[1]
+        file_path = os.path.join(PROFILE_IMAGES_DIR, filename)
+        
+        # Salva il file
+        file.save(file_path)
+        
+        # Aggiorna il JSON con il percorso della nuova immagine
+        cv_data = load_cv_data()
+        
+        # Salva il percorso relativo dell'immagine nel JSON
+        cv_data['basics']['photo'] = os.path.join('img', filename).replace('\\', '/')
+        save_cv_data(cv_data)
+        
+        flash('Foto profilo caricata con successo!', 'success')
+    else:
+        flash('Formato file non supportato. Utilizzare PNG, JPG o JPEG.', 'danger')
+    
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

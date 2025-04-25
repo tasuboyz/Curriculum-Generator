@@ -48,18 +48,56 @@ for section in sections:
     section.left_margin = Inches(0.5)
     section.right_margin = Inches(0.5)
 
-# Intestazione con nome e titolo
-header = doc.add_paragraph()
-name_run = header.add_run(cv_data['basics']['name'])
-name_run.bold = True
-name_run.font.size = Pt(24)
-name_run.font.color.rgb = RGBColor(68, 114, 196)  # Blu moderno
+# Crea una tabella per l'intestazione con foto (se presente)
+has_photo = 'photo' in cv_data['basics'] and cv_data['basics']['photo']
+if has_photo:
+    # Usa tabella per mettere foto a destra e nome/tagline a sinistra
+    header_table = doc.add_table(rows=1, cols=2)
+    header_table.autofit = False
+    
+    # Colonna sinistra per nome e tagline
+    left_cell = header_table.cell(0, 0)
+    left_cell.width = Inches(5.5)
+    
+    # Nome e titolo
+    name_para = left_cell.paragraphs[0]
+    name_run = name_para.add_run(cv_data['basics']['name'])
+    name_run.bold = True
+    name_run.font.size = Pt(24)
+    name_run.font.color.rgb = RGBColor(68, 114, 196)  # Blu moderno
+    
+    # Tagline sotto il nome
+    tagline_para = left_cell.add_paragraph()
+    tagline_run = tagline_para.add_run(cv_data['basics']['tagline'])
+    tagline_run.italic = True
+    tagline_run.font.size = Pt(12)
+    
+    # Colonna destra per la foto
+    right_cell = header_table.cell(0, 1)
+    right_cell.width = Inches(1.5)
+    right_cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    
+    # Aggiungi la foto
+    photo_path = os.path.join('static', cv_data['basics']['photo'])
+    if os.path.exists(photo_path):
+        try:
+            photo_run = right_cell.paragraphs[0].add_run()
+            photo_run.add_picture(photo_path, width=Inches(1.3), height=Inches(1.3))
+        except Exception as e:
+            print(f"Errore nel caricare l'immagine: {e}")
+else:
+    # Intestazione standard senza foto
+    header = doc.add_paragraph()
+    name_run = header.add_run(cv_data['basics']['name'])
+    name_run.bold = True
+    name_run.font.size = Pt(24)
+    name_run.font.color.rgb = RGBColor(68, 114, 196)  # Blu moderno
 
-# Tagline sotto il nome
-tagline_para = doc.add_paragraph()
-tagline_run = tagline_para.add_run(cv_data['basics']['tagline'])
-tagline_run.italic = True
-tagline_run.font.size = Pt(12)
+    # Tagline sotto il nome
+    tagline_para = doc.add_paragraph()
+    tagline_run = tagline_para.add_run(cv_data['basics']['tagline'])
+    tagline_run.italic = True
+    tagline_run.font.size = Pt(12)
 
 # Linea separatrice
 line_para = doc.add_paragraph()

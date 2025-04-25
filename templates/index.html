@@ -189,66 +189,97 @@
                 </h2>
                 <div id="basicsCollapse" class="accordion-collapse collapse show" aria-labelledby="basicsHeading">
                     <div class="accordion-body">
-                        <form action="{{ url_for('update_basics') }}" method="POST">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="name" class="form-label">Nome Completo</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ cv.basics.name }}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="tagline" class="form-label">Tagline</label>
-                                    <input type="text" class="form-control" id="tagline" name="tagline" value="{{ cv.basics.tagline }}">
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ cv.basics.email }}" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="mobile" class="form-label">Telefono Mobile</label>
-                                    <input type="text" class="form-control" id="mobile" name="mobile" value="{{ cv.basics.phone.mobile }}">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="fixed" class="form-label">Telefono Fisso</label>
-                                    <input type="text" class="form-control" id="fixed" name="fixed" value="{{ cv.basics.phone.fixed }}">
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="github" class="form-label">GitHub</label>
-                                    <input type="text" class="form-control" id="github" name="github" value="{{ cv.basics.profiles.github }}">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="telegram" class="form-label">Telegram</label>
-                                    <input type="text" class="form-control" id="telegram" name="telegram" value="{{ cv.basics.profiles.telegram }}">
+                        <!-- Foto profilo -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Foto Profilo</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        {% if cv.basics.photo %}
+                                        <div class="mb-3">
+                                            <img src="{{ url_for('static', filename=cv.basics.photo) }}" alt="Foto Profilo" class="img-fluid rounded-circle profile-photo" style="max-width: 150px; max-height: 150px;">
+                                        </div>
+                                        {% else %}
+                                        <div class="mb-3">
+                                            <div class="no-photo-placeholder rounded-circle d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; background-color: var(--dark-input); margin: 0 auto;">
+                                                <i class="fas fa-user fa-4x" style="color: var(--text-secondary);"></i>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <form action="{{ url_for('upload_photo') }}" method="POST" enctype="multipart/form-data">
+                                            <div class="mb-3">
+                                                <input class="form-control form-control-sm" type="file" name="profile_photo" accept="image/png, image/jpeg, image/jpg">
+                                            </div>
+                                            <button type="submit" class="btn btn-sm btn-cv">Carica Foto</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="location" class="form-label">Indirizzo</label>
-                                <input type="text" class="form-control" id="location" name="location" value="{{ cv.basics.location }}">
+                            <div class="col-md-8">
+                                <form action="{{ url_for('update_basics') }}" method="POST">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="name" class="form-label">Nome Completo</label>
+                                            <input type="text" class="form-control" id="name" name="name" value="{{ cv.basics.name }}" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="tagline" class="form-label">Tagline</label>
+                                            <input type="text" class="form-control" id="tagline" name="tagline" value="{{ cv.basics.tagline }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ cv.basics.email }}" required>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="mobile" class="form-label">Telefono Mobile</label>
+                                            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ cv.basics.phone.mobile }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="fixed" class="form-label">Telefono Fisso</label>
+                                            <input type="text" class="form-control" id="fixed" name="fixed" value="{{ cv.basics.phone.fixed }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="github" class="form-label">GitHub</label>
+                                            <input type="text" class="form-control" id="github" name="github" value="{{ cv.basics.profiles.github }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="telegram" class="form-label">Telegram</label>
+                                            <input type="text" class="form-control" id="telegram" name="telegram" value="{{ cv.basics.profiles.telegram }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="location" class="form-label">Indirizzo</label>
+                                        <input type="text" class="form-control" id="location" name="location" value="{{ cv.basics.location }}">
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="birth_date" class="form-label">Data di Nascita</label>
+                                            <input type="text" class="form-control" id="birth_date" name="birth_date" value="{{ cv.basics.birth.date }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="birth_place" class="form-label">Luogo di Nascita</label>
+                                            <input type="text" class="form-control" id="birth_place" name="birth_place" value="{{ cv.basics.birth.place }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="nationality" class="form-label">Nazionalità</label>
+                                            <input type="text" class="form-control" id="nationality" name="nationality" value="{{ cv.basics.nationality }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-cv">Aggiorna</button>
+                                </form>
                             </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="birth_date" class="form-label">Data di Nascita</label>
-                                    <input type="text" class="form-control" id="birth_date" name="birth_date" value="{{ cv.basics.birth.date }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="birth_place" class="form-label">Luogo di Nascita</label>
-                                    <input type="text" class="form-control" id="birth_place" name="birth_place" value="{{ cv.basics.birth.place }}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="nationality" class="form-label">Nazionalità</label>
-                                    <input type="text" class="form-control" id="nationality" name="nationality" value="{{ cv.basics.nationality }}">
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-cv">Aggiorna</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
