@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiornamento CV - {{ cv.basics.name }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --dark-card: #1e1e1e;
+            --dark-input: #2d2d2d;
+            --accent-color: #6c5ce7;
+            --accent-hover: #5649c0;
+            --text-primary: #e2e2e2;
+            --text-secondary: #b3b3b3;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        body {
+            padding-top: 20px;
+            padding-bottom: 50px;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+        }
+        
+        .container {
+            background-color: var(--dark-bg);
+        }
+        
+        .section-title {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+        
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            background-color: var(--dark-card);
+            border: 1px solid #333;
+        }
+        
+        .card-header {
+            background-color: rgba(0,0,0,0.2);
+            color: var(--text-primary);
+            border-bottom: 1px solid #444;
+        }
+        
+        .accordion-item {
+            background-color: var(--dark-card);
+            border: 1px solid #444;
+        }
+        
+        .accordion-button {
+            background-color: var(--dark-card);
+            color: var(--text-primary);
+        }
+        
+        .accordion-button:not(.collapsed) {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .accordion-button:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+        }
+        
+        .accordion-button:after {
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e2e2e2'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+        }
+        
+        .accordion-button:not(.collapsed):after {
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+        }
+        
+        .btn-cv {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-cv:hover {
+            background-color: var(--accent-hover);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .form-control, .form-select {
+            background-color: var(--dark-input);
+            border: 1px solid #444;
+            color: var(--text-primary);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: var(--dark-input);
+            color: var(--text-primary);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+        }
+        
+        .form-label {
+            color: var(--text-primary);
+        }
+        
+        .form-text {
+            color: var(--text-secondary);
+        }
+        
+        .text-secondary {
+            color: var(--text-secondary) !important;
+        }
+        
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success-color);
+            border-color: rgba(46, 204, 113, 0.5);
+        }
+        
+        .alert-danger {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--danger-color);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+        
+        .alert-warning {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+            border-color: rgba(241, 196, 15, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="mb-4">
+            <h1 class="text-center mb-3">Editor CV</h1>
+            <h2 class="text-center text-secondary">{{ cv.basics.name }}</h2>
+            
+            <!-- Flash messages -->
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            
+            <!-- Buttons for CV generation and download -->
+            <div class="text-center mb-4">
+                <a href="{{ url_for('generate_cv') }}" class="btn btn-cv me-2">
+                    <i class="fas fa-file-word"></i> Genera CV
+                </a>
+                <a href="{{ url_for('download_cv') }}" class="btn btn-success">
+                    <i class="fas fa-download"></i> Scarica CV
+                </a>
+            </div>
+        </header>
+        
+        <!-- Accordion for all CV sections -->
+        <div class="accordion" id="cvAccordion">
+            
+            <!-- BASIC INFORMATION -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="basicsHeading">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#basicsCollapse" aria-expanded="true" aria-controls="basicsCollapse">
+                        <i class="fas fa-user me-2"></i> Informazioni di Base
+                    </button>
+                </h2>
+                <div id="basicsCollapse" class="accordion-collapse collapse show" aria-labelledby="basicsHeading">
+                    <div class="accordion-body">
+                        <form action="{{ url_for('update_basics') }}" method="POST">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ cv.basics.name }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tagline" class="form-label">Tagline</label>
+                                    <input type="text" class="form-control" id="tagline" name="tagline" value="{{ cv.basics.tagline }}">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ cv.basics.email }}" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="mobile" class="form-label">Telefono Mobile</label>
+                                    <input type="text" class="form-control" id="mobile" name="mobile" value="{{ cv.basics.phone.mobile }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="fixed" class="form-label">Telefono Fisso</label>
+                                    <input type="text" class="form-control" id="fixed" name="fixed" value="{{ cv.basics.phone.fixed }}">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="github" class="form-label">GitHub</label>
+                                    <input type="text" class="form-control" id="github" name="github" value="{{ cv.basics.profiles.github }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="telegram" class="form-label">Telegram</label>
+                                    <input type="text" class="form-control" id="telegram" name="telegram" value="{{ cv.basics.profiles.telegram }}">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Indirizzo</label>
+                                <input type="text" class="form-control" id="location" name="location" value="{{ cv.basics.location }}">
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="birth_date" class="form-label">Data di Nascita</label>
+                                    <input type="text" class="form-control" id="birth_date" name="birth_date" value="{{ cv.basics.birth.date }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="birth_place" class="form-label">Luogo di Nascita</label>
+                                    <input type="text" class="form-control" id="birth_place" name="birth_place" value="{{ cv.basics.birth.place }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="nationality" class="form-label">Nazionalità</label>
+                                    <input type="text" class="form-control" id="nationality" name="nationality" value="{{ cv.basics.nationality }}">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-cv">Aggiorna</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- WORK EXPERIENCE -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="workHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#workCollapse" aria-expanded="false" aria-controls="workCollapse">
+                        <i class="fas fa-briefcase me-2"></i> Esperienze Lavorative
+                    </button>
+                </h2>
+                <div id="workCollapse" class="accordion-collapse collapse" aria-labelledby="workHeading">
+                    <div class="accordion-body">
+                        <!-- Existing work experiences -->
+                        <div class="mb-4">
+                            <h5>Esperienze Attuali</h5>
+                            {% for job in cv.work %}
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>{{ job.position }} presso {{ job.company }}</span>
+                                        <a href="{{ url_for('delete_work', index=loop.index0) }}" class="btn btn-sm btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questa esperienza?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="{{ url_for('update_work') }}" method="POST">
+                                            <input type="hidden" name="work_index" value="{{ loop.index0 }}">
+                                            
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Azienda</label>
+                                                    <input type="text" class="form-control" name="company" value="{{ job.company }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Posizione</label>
+                                                    <input type="text" class="form-control" name="position" value="{{ job.position }}" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Durata</label>
+                                                <input type="text" class="form-control" name="duration" value="{{ job.duration }}">
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Risultati/Attività (uno per riga)</label>
+                                                <textarea class="form-control" rows="4" name="achievements">{{ job.achievements | join('\n') }}</textarea>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-cv">Aggiorna</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Add new work experience -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Aggiungi Nuova Esperienza</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ url_for('add_work') }}" method="POST">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Azienda</label>
+                                            <input type="text" class="form-control" name="company" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Posizione</label>
+                                            <input type="text" class="form-control" name="position" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Durata</label>
+                                        <input type="text" class="form-control" name="duration">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Risultati/Attività (uno per riga)</label>
+                                        <textarea class="form-control" rows="4" name="achievements"></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-cv">Aggiungi</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- EDUCATION -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="educationHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#educationCollapse" aria-expanded="false" aria-controls="educationCollapse">
+                        <i class="fas fa-graduation-cap me-2"></i> Istruzione e Formazione
+                    </button>
+                </h2>
+                <div id="educationCollapse" class="accordion-collapse collapse" aria-labelledby="educationHeading">
+                    <div class="accordion-body">
+                        <!-- Existing education -->
+                        <div class="mb-4">
+                            <h5>Formazione Attuale</h5>
+                            {% for edu in cv.education %}
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>{{ edu.degree }}</span>
+                                        <a href="{{ url_for('delete_education', index=loop.index0) }}" class="btn btn-sm btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo titolo di studio?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="{{ url_for('update_education') }}" method="POST">
+                                            <input type="hidden" name="edu_index" value="{{ loop.index0 }}">
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Titolo di studio</label>
+                                                <input type="text" class="form-control" name="degree" value="{{ edu.degree }}" required>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Istituzione</label>
+                                                <input type="text" class="form-control" name="institution" value="{{ edu.institution }}">
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-cv">Aggiorna</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Add new education -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Aggiungi Nuovo Titolo di Studio</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ url_for('add_education') }}" method="POST">
+                                    <div class="mb-3">
+                                        <label class="form-label">Titolo di studio</label>
+                                        <input type="text" class="form-control" name="degree" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Istituzione</label>
+                                        <input type="text" class="form-control" name="institution">
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-cv">Aggiungi</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SKILLS -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="skillsHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skillsCollapse" aria-expanded="false" aria-controls="skillsCollapse">
+                        <i class="fas fa-tools me-2"></i> Competenze
+                    </button>
+                </h2>
+                <div id="skillsCollapse" class="accordion-collapse collapse" aria-labelledby="skillsHeading">
+                    <div class="accordion-body">
+                        <form action="{{ url_for('update_skills') }}" method="POST">
+                            <!-- AI Skills -->
+                            <div class="mb-3">
+                                <label class="form-label">Competenze AI</label>
+                                <input type="text" class="form-control" name="ai_skills" value="{{ cv.skills.ai | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <!-- Programming Skills -->
+                            <div class="mb-3">
+                                <label class="form-label">Programmazione - Avanzato</label>
+                                <input type="text" class="form-control" name="prog_advanced" value="{{ cv.skills.programming.advanced | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Programmazione - Intermedio</label>
+                                <input type="text" class="form-control" name="prog_intermediate" value="{{ cv.skills.programming.intermediate | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Programmazione - Base</label>
+                                <input type="text" class="form-control" name="prog_basic" value="{{ cv.skills.programming.basic | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <!-- Industrial Automation -->
+                            <div class="mb-3">
+                                <label class="form-label">Automazione Industriale</label>
+                                <input type="text" class="form-control" name="industrial_automation" value="{{ cv.skills.industrialAutomation | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <!-- Systems -->
+                            <div class="mb-3">
+                                <label class="form-label">Windows</label>
+                                <input type="text" class="form-control" name="systems_windows" value="{{ cv.skills.systems.windows }}">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Linux</label>
+                                <input type="text" class="form-control" name="systems_linux" value="{{ cv.skills.systems.linux }}">
+                            </div>
+                            
+                            <!-- Software and DevOps -->
+                            <div class="mb-3">
+                                <label class="form-label">Software</label>
+                                <input type="text" class="form-control" name="software_skills" value="{{ cv.skills.software | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">DevOps & Database</label>
+                                <input type="text" class="form-control" name="devops_skills" value="{{ cv.skills.devOps | join(', ') }}">
+                                <div class="form-text">Separa le competenze con virgole</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-cv">Aggiorna Competenze</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LANGUAGES -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="languagesHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#languagesCollapse" aria-expanded="false" aria-controls="languagesCollapse">
+                        <i class="fas fa-language me-2"></i> Lingue
+                    </button>
+                </h2>
+                <div id="languagesCollapse" class="accordion-collapse collapse" aria-labelledby="languagesHeading">
+                    <div class="accordion-body">
+                        <!-- Existing languages -->
+                        <div class="mb-4">
+                            <h5>Lingue Attuali</h5>
+                            {% for lang in cv.languages %}
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>{{ lang.language }}</span>
+                                        <a href="{{ url_for('delete_language', index=loop.index0) }}" class="btn btn-sm btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questa lingua?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="{{ url_for('update_languages') }}" method="POST">
+                                            <input type="hidden" name="lang_index" value="{{ loop.index0 }}">
+                                            
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Lingua</label>
+                                                    <input type="text" class="form-control" name="language" value="{{ lang.language }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Livello</label>
+                                                    <input type="text" class="form-control" name="level" value="{{ lang.level }}">
+                                                </div>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-cv">Aggiorna</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Add new language -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Aggiungi Nuova Lingua</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ url_for('add_language') }}" method="POST">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Lingua</label>
+                                            <input type="text" class="form-control" name="language" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Livello</label>
+                                            <input type="text" class="form-control" name="level">
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-cv">Aggiungi</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DIGITAL SKILLS -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="digitalSkillsHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#digitalSkillsCollapse" aria-expanded="false" aria-controls="digitalSkillsCollapse">
+                        <i class="fas fa-desktop me-2"></i> Competenze Digitali
+                    </button>
+                </h2>
+                <div id="digitalSkillsCollapse" class="accordion-collapse collapse" aria-labelledby="digitalSkillsHeading">
+                    <div class="accordion-body">
+                        <!-- Existing digital skills -->
+                        <div class="mb-4">
+                            <h5>Competenze Digitali Attuali</h5>
+                            {% for skill in cv.digitalSkills %}
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>{{ skill.skill }}</span>
+                                        <a href="{{ url_for('delete_digital_skill', index=loop.index0) }}" class="btn btn-sm btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questa competenza?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="{{ url_for('update_digital_skills') }}" method="POST">
+                                            <input type="hidden" name="skill_index" value="{{ loop.index0 }}">
+                                            
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Competenza</label>
+                                                    <input type="text" class="form-control" name="skill" value="{{ skill.skill }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Livello</label>
+                                                    <input type="text" class="form-control" name="level" value="{{ skill.level }}">
+                                                </div>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-cv">Aggiorna</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Add new digital skill -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Aggiungi Nuova Competenza Digitale</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ url_for('add_digital_skill') }}" method="POST">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Competenza</label>
+                                            <input type="text" class="form-control" name="skill" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Livello</label>
+                                            <input type="text" class="form-control" name="level">
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-cv">Aggiungi</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OTHER INFORMATION -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="otherHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#otherCollapse" aria-expanded="false" aria-controls="otherCollapse">
+                        <i class="fas fa-info-circle me-2"></i> Altre Informazioni
+                    </button>
+                </h2>
+                <div id="otherCollapse" class="accordion-collapse collapse" aria-labelledby="otherHeading">
+                    <div class="accordion-body">
+                        <form action="{{ url_for('update_other') }}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Patente</label>
+                                <input type="text" class="form-control" name="driving_license" value="{{ cv.other.drivingLicense }}">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Hobby</label>
+                                <input type="text" class="form-control" name="hobbies" value="{{ cv.other.hobbies | join(', ') }}">
+                                <div class="form-text">Separa gli hobby con virgole</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Qualità Personali</label>
+                                <input type="text" class="form-control" name="qualities" value="{{ cv.other.qualities | join(', ') }}">
+                                <div class="form-text">Separa le qualità con virgole</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-cv">Aggiorna</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
