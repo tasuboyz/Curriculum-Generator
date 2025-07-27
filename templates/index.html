@@ -166,13 +166,15 @@
                 {% endwith %}
             </div>
             
-            <!-- Buttons for CV generation and download -->
+            <!-- Language selection and CV generation/download buttons -->
             <div class="text-center mb-4">
-                <a href="{{ url_for('generate_cv') }}" class="btn btn-cv me-2">
-                    <i class="fas fa-file-word"></i> Genera CV
+                <a href="{{ url_for('index', lang='it') }}" class="btn btn-cv me-2 {% if lang == 'it' %}active{% endif %}">🇮🇹 Italiano</a>
+                <a href="{{ url_for('index', lang='en') }}" class="btn btn-cv me-2 {% if lang == 'en' %}active{% endif %}">🇬🇧 English</a>
+                <a href="{{ url_for('generate_cv', lang=lang) }}" class="btn btn-cv me-2">
+                    <i class="fas fa-file-word"></i> {% if lang == 'en' %}Generate CV{% else %}Genera CV{% endif %}
                 </a>
-                <a href="{{ url_for('download_cv') }}" class="btn btn-success">
-                    <i class="fas fa-download"></i> Scarica CV
+                <a href="{{ url_for('download_cv', lang=lang) }}" class="btn btn-success">
+                    <i class="fas fa-download"></i> {% if lang == 'en' %}Download CV{% else %}Scarica CV{% endif %}
                 </a>
             </div>
         </header>

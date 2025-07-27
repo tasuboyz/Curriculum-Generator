@@ -27,9 +27,10 @@ def allowed_file(filename):
 # Assicurati che la cartella per le immagini esista
 os.makedirs(PROFILE_IMAGES_DIR, exist_ok=True)
 
-def load_cv_data():
-    """Carica i dati dal file JSON del CV."""
-    with open(CV_JSON_PATH, 'r', encoding='utf-8') as file:
+def load_cv_data(lang='it'):
+    """Carica i dati dal file JSON del CV nella lingua selezionata."""
+    file_path = CV_JSON_PATH if lang == 'it' else 'cv_en.json'
+    with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 def save_cv_data(cv_data):
@@ -40,8 +41,9 @@ def save_cv_data(cv_data):
 @app.route('/')
 def index():
     """Route principale che mostra il form con i dati del CV."""
-    cv_data = load_cv_data()
-    return render_template('index.html', cv=cv_data)
+    lang = request.args.get('lang', 'it')
+    cv_data = load_cv_data(lang)
+    return render_template('index.html', cv=cv_data, lang=lang)
 
 @app.route('/update/basics', methods=['POST'])
 def update_basics():
@@ -277,39 +279,32 @@ def update_other():
 
 @app.route('/generate-cv')
 def generate_cv():
-    """Genera il CV in formato DOCX utilizzando il modulo generation_cv esistente."""
+    """Genera il CV in formato DOCX nella lingua selezionata."""
     try:
-        # Importiamo e ricarghiamo il modulo generation_cv per assicurarci di avere le ultime modifiche
         import importlib
         importlib.reload(generation_cv)
-        
-        # Esegui la funzione principale del modulo generation_cv
-        output_filename = ""
-        # Verifichiamo il nome del file generato
-        cv_data = load_cv_data()
-        output_filename = f"CV_{cv_data['basics']['name'].replace(' ', '_')}.docx"
-        
-        # Genera il CV
-        generation_cv.doc.save(output_filename)
-        
-        flash(f'CV generato con successo come "{output_filename}"!', 'success')
-        return redirect(url_for('index'))
+        lang = request.args.get('lang', 'it')
+        json_path = CV_JSON_PATH if lang == 'it' else 'cv_en.json'
+        cv_data = load_cv_data(lang)
+        output_filename = f"CV_{cv_data['basics']['name'].replace(' ', '_')}_{lang}.docx"
+        generation_cv.generate_cv(json_path, output_filename)
+        flash(f'CV generated successfully as "{output_filename}"!', 'success')
+        return redirect(url_for('index', lang=lang))
     except Exception as e:
-        flash(f'Errore durante la generazione del CV: {str(e)}', 'danger')
+        flash(f'Error generating CV: {str(e)}', 'danger')
         return redirect(url_for('index'))
 
 @app.route('/download-cv')
 def download_cv():
-    """Scarica il file CV generato."""
-    cv_data = load_cv_data()
-    output_filename = f"CV_{cv_data['basics']['name'].replace(' ', '_')}.docx"
-    
-    # Verifica se il file esiste
+    """Scarica il file CV generato nella lingua selezionata."""
+    lang = request.args.get('lang', 'it')
+    cv_data = load_cv_data(lang)
+    output_filename = f"CV_{cv_data['basics']['name'].replace(' ', '_')}_{lang}.docx"
     if os.path.exists(output_filename):
         return send_file(output_filename, as_attachment=True)
     else:
-        flash('Il file CV non è stato ancora generato. Genera prima il CV.', 'warning')
-        return redirect(url_for('index'))
+        flash('CV file not generated yet. Please generate the CV first.', 'warning')
+        return redirect(url_for('index', lang=lang))
 
 @app.route('/upload-photo', methods=['POST'])
 def upload_photo():

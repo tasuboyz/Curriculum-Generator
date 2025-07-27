@@ -1,0 +1,196 @@
+{
+  "basics": {
+    "name": "Tasuhiro Davide Kato",
+    "tagline": "IT Support & AI Developer - Turning ideas into intelligent solutions through code",
+    "email": "tasuhiro.davide@gmail.com",
+    "phone": {
+      "mobile": "+39 371-1369107",
+      "fixed": "030-2770789"
+    },
+    "profiles": {
+      "github": "tasuboyz",
+      "telegram": "tasu_Channel"
+    },
+    "location": "Via IV Novembre 15, GUSSAGO (BS), ITALY",
+    "birth": {
+      "date": "02/08/2000",
+      "place": "Tokyo (Japan)"
+    },
+    "nationality": "Italian and Japanese",
+    "photo": "img/250b8d17-e73c-4c97-bd73-187dc1c7495a.jpg"
+  },
+  "work": [
+    {
+      "company": "Bonomi Industries S.R.L",
+      "position": "IT System Administrator",
+      "duration": "2 years",
+      "achievements": [
+        "Management of company IT infrastructure and user support (Windows systems)",
+        "Automatic PRN file reader with QR code and barcode recognition",
+        "Software for scanning company filesystem permissions",
+        "User-friendly database interfaces",
+        "Telegram bot for monitoring access to company gates",
+        "Software for scanning domain PCs (PC management tool)",
+        "User lock monitoring software",
+        "Software to automate company PC setups",
+        "Software for inventory of installed programs",
+        "Single Board Computer configuration (khadas, ubuntu 24.04)",
+        "Linux Server red hat configuration for docker with portainer.",
+        "GLPI configuration inside container and plugin customization",
+        "Local n8n configuration for automation, also with AI"
+      ]
+    },
+    {
+      "company": "Asonext S.P.A",
+      "position": "IT Technician - Apprentice",
+      "duration": "1.5 years",
+      "achievements": [
+        "Helpdesk and user support (Windows systems)",
+        "HMI panel configuration for production",
+        "Development of internal tools (Visual Studio Code, Visual Studio, DevExpress)",
+        "PLC programming (KOP, AWL, SCL)"
+      ]
+    },
+    {
+      "company": "Asonext S.P.A",
+      "position": "PLC Programming Intern",
+      "duration": "5 months",
+      "achievements": [
+        "Training on PLC programming languages",
+        "Support for the development of industrial automation systems"
+      ]
+    },
+    {
+      "company": "Casa dello Studente (Gussago)",
+      "position": "Homework Assistant",
+      "duration": "",
+      "achievements": [
+        "Study assistance for primary school children"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Higher Technical Specialization Diploma in Mechatronics",
+      "institution": "ITS - Luigi Cerebotani Higher Education Institute, Lonato (BS)"
+    },
+    {
+      "degree": "High School Diploma in Social-Economic Sciences",
+      "institution": "Marco Polo Institute, Brescia, 2019"
+    }
+  ],
+  "skills": {
+    "ai": [
+      "Machine Learning",
+      "TensorFlow",
+      "PyTorch",
+      "Hugging Face",
+      "LLM Integration",
+      "n8n",
+      "vector database"
+    ],
+    "programming": {
+      "advanced": [
+        "C#",
+        "Python",
+        "Batch",
+        "Powershell",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "intermediate": [
+        "Typescript"
+      ],
+      "basic": [
+        "VBA"
+      ]
+    },
+    "industrialAutomation": [
+      "PLC (KOP",
+      "AWL",
+      "SCL)",
+      "HMI Configuration"
+    ],
+    "systems": {
+      "windows": "Advanced Management & Troubleshooting",
+      "linux": "Server Configuration & Hosting"
+    },
+    "software": [
+      "Visual Studio",
+      "DevExpress",
+      "Microsoft Office",
+      "GitHub",
+      "Visual Studio Code",
+      "Git",
+      "Github Copilot",
+      "AuditPlus",
+      "VSphire",
+      "Veeam",
+      "Acronis",
+      "UltraVNC",
+      "Keepass",
+      "Glpi",
+      "Ollama",
+      "LibraEsva",
+      "n8n"
+    ],
+    "devOps": [
+      "Git",
+      "GitHub",
+      "SQL",
+      "MySQL",
+      "SQLite",
+      "Docker"
+    ]
+  },
+  "languages": [
+    {
+      "language": "Italian",
+      "level": "Native"
+    },
+    {
+      "language": "English",
+      "level": "B1-B2 (Fair)"
+    },
+    {
+      "language": "Japanese",
+      "level": "Excellent understanding and speaking, Good reading, Fair writing"
+    }
+  ],
+  "digitalSkills": [
+    {
+      "skill": "Information processing",
+      "level": "Excellent"
+    },
+    {
+      "skill": "Communication",
+      "level": "Good"
+    },
+    {
+      "skill": "Content creation",
+      "level": "Very Good"
+    },
+    {
+      "skill": "Security",
+      "level": "Good"
+    },
+    {
+      "skill": "Problem solving",
+      "level": "Moderately Good"
+    }
+  ],
+  "other": {
+    "drivingLicense": "B",
+    "hobbies": [
+      "Development as a hobby",
+      "Implementation of personal projects with generative AI models"
+    ],
+    "qualities": [
+      "Polite",
+      "Respectful",
+      "Innovative",
+      "Problem Solver"
+    ]
+  }
+}
